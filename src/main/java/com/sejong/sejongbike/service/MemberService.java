@@ -7,9 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,12 +17,12 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberService implements UserDetailsService {
+public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
     //Member 전체 항목 받아오기
-    public List<MemberDTO> getMemberIndex(){
+    public List<MemberDTO> getMemberIndex() {
         List<MemberDTO> memberDTOList = memberRepository.findAll()
                 .stream()
                 .map(member -> MemberDTO.toMemberDTO(member))
@@ -34,7 +31,7 @@ public class MemberService implements UserDetailsService {
     }
 
     //Member 한개 받아오기
-    public MemberDTO getMember(Long id){
+    public MemberDTO getMember(Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("대상 회원이 존재하지 않습니다."));
         MemberDTO memberDTO = MemberDTO.toMemberDTO(member);
@@ -43,9 +40,9 @@ public class MemberService implements UserDetailsService {
 
     //Member 등록하기
     @Transactional
-    public MemberDTO createMember(MemberDTO memberDTO){
+    public MemberDTO createMember(MemberDTO memberDTO) {
         Member member = Member.toMemberEntity(memberDTO);
-        if(member.getId() != null){
+        if (member.getId() != null) {
             return null;
         }
         Member createdMember = memberRepository.save(member);
@@ -55,7 +52,7 @@ public class MemberService implements UserDetailsService {
 
     //Member 수정하기
     @Transactional
-    public MemberDTO updateMember(MemberDTO memberDTO, Long id){
+    public MemberDTO updateMember(MemberDTO memberDTO, Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("대상 회원이 존재하지 않습니다."));
         member.memberUpdate(memberDTO);
@@ -66,10 +63,10 @@ public class MemberService implements UserDetailsService {
 
     //Member 삭제하기
     @Transactional
-    public MemberDTO deleteMember(Long id){
+    public MemberDTO deleteMember(Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("대상 회원이 존재하지 않습니다."));
-        if(member == null){
+        if (member == null) {
             return null;
         }
         memberRepository.delete(member);
@@ -77,10 +74,10 @@ public class MemberService implements UserDetailsService {
     }
 
     //현재 자신의 정보 확인
-    public MemberDTO getMemberInfo(){
+    public MemberDTO getMemberInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Member member = memberRepository.findByEmail(authentication.getName());
-        if(member == null){
+        if (member == null) {
             throw new UsernameNotFoundException(authentication.getName());
         }
         MemberDTO memberDTO = MemberDTO.toMemberDTO(member);
@@ -88,17 +85,11 @@ public class MemberService implements UserDetailsService {
     }
 
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public Member findByEmail(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email);
-        if(member == null){
+        if (member == null) {
             throw new UsernameNotFoundException(email);
         }
-        /*return MemberDTO(member);*/
-        return User.builder()
-                .username(member.getEmail())
-                .password(member.getPassword())
-                .roles(member.getRole().toString())
-                .build();
+        return member;
     }
 }

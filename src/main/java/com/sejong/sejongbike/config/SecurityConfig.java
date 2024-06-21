@@ -3,12 +3,10 @@ package com.sejong.sejongbike.config;
 import com.sejong.sejongbike.auth.http.CustomAccessDeniedHandler;
 import com.sejong.sejongbike.auth.http.CustomAuthenticationEntryPoint;
 import com.sejong.sejongbike.auth.jwt.JwtAuthenticationFilter;
-import com.sejong.sejongbike.auth.oauth.OAuth2AuthenticationSuccessHandler;
 import com.sejong.sejongbike.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,7 +14,6 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -27,25 +24,20 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @EnableWebSecurity
 @Slf4j
 public class SecurityConfig {
-    private final ClientRegistrationRepository clientRegistrationRepository;
-    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CorsConfigurationSource corsConfigurationSource;
     private final MemberService memberService;
 
 
-    public SecurityConfig(ClientRegistrationRepository clientRegistrationRepository,
-                          @Lazy OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
-                          JwtAuthenticationFilter jwtAuthenticationFilter,
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
                           CorsConfigurationSource corsConfigurationSource,
                           MemberService memberService) {
 
-        this.clientRegistrationRepository = clientRegistrationRepository;
-        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.corsConfigurationSource = corsConfigurationSource;
         this.memberService = memberService;
     }
+
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return new CustomAccessDeniedHandler();
@@ -57,7 +49,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .headers(headerConfig -> headerConfig
@@ -89,21 +81,20 @@ public class SecurityConfig {
                         .accessDeniedHandler(accessDeniedHandler())   // 403 Forbidden 처리 관련
                         .authenticationEntryPoint(authenticationEntryPoint())   // 401 Unauthorized, 500 Internal Server Error 처리 관련
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .clientRegistrationRepository(clientRegistrationRepository)
-                        .successHandler(oAuth2AuthenticationSuccessHandler)
-                )
+//                .oauth2Login(oauth2 -> oauth2
+//                        .clientRegistrationRepository(clientRegistrationRepository)
+//                        .successHandler(oAuth2AuthenticationSuccessHandler)
+//                )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
-                .csrf(csrf -> csrf.disable()) // CSRF 비활성화
-                .userDetailsService(memberService);
+                .csrf(csrf -> csrf.disable()); // CSRF 비활성화
 
         return httpSecurity.build();
 
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

@@ -2,6 +2,7 @@ package com.sejong.sejongbike.apicontroller;
 
 import com.sejong.sejongbike.auth.jwt.JwtProvider;
 import com.sejong.sejongbike.auth.jwt.JwtRequest;
+import com.sejong.sejongbike.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -18,38 +19,28 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 public class JwtController {
-    private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
-    private final InMemoryUserDetailsManager userDetailsService;
+    private final MemberService memberService;
 
-    public JwtController(AuthenticationManager authenticationManager, JwtProvider jwtProvider, @Lazy InMemoryUserDetailsManager userDetailsService) {
-        this.authenticationManager = authenticationManager;
+    public JwtController(JwtProvider jwtProvider, MemberService memberService) {
         this.jwtProvider = jwtProvider;
-        this.userDetailsService = userDetailsService;
+        this.memberService = memberService;
     }
 
     @PostMapping("/token")
     public ResponseEntity<?> login(@RequestBody JwtRequest jwtRequest, HttpServletResponse response) {
-// 사용자 인증
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        jwtRequest.getUsername(),
-                        jwtRequest.getPassword()
-                )
-        );
 
-        // 인증된 사용자 정보 가져오기
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        memberService.findByEmail(jwtRequest.getUsername());
 
         // JWT 토큰 생성
-        final String token = jwtProvider.createToken(userDetails.getUsername());
+        final String token = jwtProvider.createToken(jwtRequest.getUsername());
 
         // JWT 토큰을 응답 헤더로 추가
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
 
         // JWT 리프레시 토큰 생성
-        final String refreshToken = jwtProvider.createRefreshToken(userDetails.getUsername());
+        final String refreshToken = jwtProvider.createRefreshToken(jwtRequest.getUsername());
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setPath("/refresh-token");
