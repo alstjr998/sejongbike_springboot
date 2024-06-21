@@ -63,9 +63,12 @@ public class SecurityConfig {
                 .headers(headerConfig -> headerConfig
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
                 )
-
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/token").permitAll()  //토큰생성(로그인)
+                        .requestMatchers("/invalidate-token").permitAll()   //토큰삭제(리프레시토큰까지 제거)
+
                         .requestMatchers("/").permitAll()
+                        .requestMatchers("/login/mypage").permitAll()
                         .requestMatchers("/login/home").authenticated()
                         .requestMatchers("/apicontroll/member").hasRole("ADMIN")
                         .requestMatchers("/login/admin").hasRole("ADMIN")
@@ -73,6 +76,8 @@ public class SecurityConfig {
                         .requestMatchers(request -> request.getServletPath().endsWith(".html")).permitAll()
                         .anyRequest().authenticated()
                 )
+
+                .httpBasic(httpBasic -> httpBasic.disable()) //httpBasic 비활성화 (JWT로 대체)
 
                 .formLogin(formLogin -> formLogin.disable()) //formLogin 비활성화 (JWT로 대체)
 
