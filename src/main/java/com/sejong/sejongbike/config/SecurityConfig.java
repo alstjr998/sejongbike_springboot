@@ -38,22 +38,10 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login-process")
-                        .usernameParameter("login_id")
-                        .passwordParameter("login_pw")
-                        .failureUrl("/login/error")
-                        .defaultSuccessUrl("/", true)
-                        .permitAll()
-                )
+                .formLogin(formLogin -> formLogin.disable()) //formLogin 비활성화 (JWT로 대체)
 
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true)
-                        .permitAll()
-                )
+                .logout(logout -> logout.disable()) //logout 비활성화 (JWT로 대체)
+
                 .userDetailsService(memberService);
 
         return httpSecurity.build();
