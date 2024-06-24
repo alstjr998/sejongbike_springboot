@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
 
         // 특정 URI에 대해 필터를 건너뛴다.
-        if (uri.equals("/invalidate-token")) {
+        if (uri.equals("/logout")) {
             filterChain.doFilter(request, response);
             return;
         }

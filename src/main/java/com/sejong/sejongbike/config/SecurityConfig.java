@@ -57,7 +57,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/login").permitAll()  //토큰생성(로그인)
-                        .requestMatchers("/invalidate-token").permitAll()   //토큰삭제(리프레시토큰까지 제거)
+                        .requestMatchers("/logout").permitAll()   //토큰삭제(리프레시토큰까지 제거)
 
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/login/mypage").permitAll()

@@ -49,7 +49,7 @@ public class JwtController {
         return ResponseEntity.ok().headers(headers).build();
     }
 
-    @GetMapping("/invalidate-token")
+    @GetMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authorizationHeader, HttpServletResponse response) {
         // 리프레시 토큰 무효화 (쿠키 삭제)
         Cookie refreshTokenCookie = new Cookie("refreshToken", null);
