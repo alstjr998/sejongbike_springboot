@@ -27,7 +27,7 @@ public class JwtController {
         this.memberService = memberService;
     }
 
-    @PostMapping("/token")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody JwtRequest jwtRequest, HttpServletResponse response) {
 
         memberService.findByEmail(jwtRequest.getUsername());
