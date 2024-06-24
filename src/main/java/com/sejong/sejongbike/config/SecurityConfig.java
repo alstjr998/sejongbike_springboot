@@ -56,7 +56,7 @@ public class SecurityConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/token").permitAll()  //토큰생성(로그인)
+                        .requestMatchers("/login").permitAll()  //토큰생성(로그인)
                         .requestMatchers("/invalidate-token").permitAll()   //토큰삭제(리프레시토큰까지 제거)
 
                         .requestMatchers("/").permitAll()
