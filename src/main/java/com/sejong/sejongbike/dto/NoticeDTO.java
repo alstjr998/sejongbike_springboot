@@ -3,6 +3,8 @@ package com.sejong.sejongbike.dto;
 import com.sejong.sejongbike.entity.Notice;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -11,6 +13,8 @@ public class NoticeDTO {
     private Long id;
     private String title;
     private String content;
+    private LocalDateTime subTime;
+    private LocalDateTime updateTime;
 
     public Notice toNoticeEntity(){
         return new Notice(id, title, content);
@@ -20,7 +24,9 @@ public class NoticeDTO {
         return new NoticeDTO(
                 notice.getId(),
                 notice.getTitle(),
-                notice.getContent()
+                notice.getContent(),
+                notice.getSubTime(),
+                notice.getUpdateTime()
         );
     }
 
