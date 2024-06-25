@@ -26,21 +26,21 @@ public class NoticeApiController {
     }
 
     //Notice 전체 항목 받아오기
-    @GetMapping(value = "/apicontroll/notice")
+    @GetMapping(value = "/notice")
     public ResponseEntity<List<NoticeDTO>> getNoticeIndex(){
         List<NoticeDTO> noticeIndex = noticeService.getNoticeIndex();
         return ResponseEntity.status(HttpStatus.OK).body(noticeIndex);
     }
 
     //Notice 한개 받아오기
-    @GetMapping(value = "/apicontroll/notice/{id}")
+    @GetMapping(value = "/notice/{id}")
     public ResponseEntity<NoticeDTO> getNotice(@PathVariable Long id){
         NoticeDTO noticeDTO = noticeService.getNotice(id);
         return ResponseEntity.status(HttpStatus.OK).body(noticeDTO);
     }
 
     //Notice 등록하기
-    @PostMapping(value = "/apicontroll/notice")
+    @PostMapping(value = "/notice/request")
     public ResponseEntity<NoticeDTO> postNotice(@RequestBody NoticeDTO noticeDTO){
         NoticeDTO createdNoticeDTO = noticeService.createNotice(noticeDTO);
         if(createdNoticeDTO != null){
@@ -52,7 +52,7 @@ public class NoticeApiController {
     }
 
     //Notice 수정하기
-    @PatchMapping(value = "/apicontroll/notice/{id}")
+    @PatchMapping(value = "/notice/request/{id}")
     public ResponseEntity<NoticeDTO> updateNotice(@RequestBody NoticeDTO noticeDTO,
                                                   @PathVariable Long id){
         NoticeDTO updatedNoticeDTO = noticeService.updateNotice(noticeDTO, id);
@@ -65,7 +65,7 @@ public class NoticeApiController {
     }
 
     //Notice 삭제하기 + 종속된 NoticeComment가 있을 경우 함께 삭제
-    @DeleteMapping(value = "/apicontroll/notice/{id}")
+    @DeleteMapping(value = "/notice/request/{id}")
     public ResponseEntity<NoticeDTO> deleteNotice(@PathVariable Long id){
         List<NoticeCommentDTO> deleteNoticeCommentBundle = noticeCommentService.deleteNoticeCommentBundle(id);
         NoticeDTO deletedNoticeDTO = noticeService.deleteNotice(id);
