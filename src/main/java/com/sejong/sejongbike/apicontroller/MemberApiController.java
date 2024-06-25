@@ -91,7 +91,7 @@ public class MemberApiController {
     }
 
     //Login 상태 확인 창 - 현재 자신의 회원 정보 확인
-    @GetMapping(value = "/login/mypage")
+    @GetMapping(value = "/mypage")
     public ResponseEntity<MemberDTO> authenticateMemberInfo(){
         MemberDTO memberDTO = memberService.getMemberInfo();
         return ResponseEntity.status(HttpStatus.OK).body(memberDTO);

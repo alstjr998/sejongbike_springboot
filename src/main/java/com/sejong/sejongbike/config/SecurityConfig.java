@@ -60,11 +60,18 @@ public class SecurityConfig {
                         .requestMatchers("/logout").permitAll()   //토큰삭제(리프레시토큰까지 제거)
 
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/login/mypage").permitAll()
+
+                        .requestMatchers("/notice").permitAll() //공지 조회
+                        .requestMatchers("/notice/request").authenticated() //공지 등록, 수정, 삭제 요청
+
+                        .requestMatchers("/mypage").authenticated() //내 정보 조회
                         .requestMatchers("/login/home").authenticated()
-                        .requestMatchers("/apicontroll/member").hasRole("ADMIN")
+
+                        .requestMatchers("/member").hasRole("ADMIN") //회원 정보 조회
                         .requestMatchers("/login/admin").hasRole("ADMIN")
-                        .requestMatchers("/apicontroll/message").authenticated()
+
+                        .requestMatchers("/message").authenticated() //메세지함 조회
+
                         .requestMatchers(request -> request.getServletPath().endsWith(".html")).permitAll()
                         .anyRequest().authenticated()
                 )
