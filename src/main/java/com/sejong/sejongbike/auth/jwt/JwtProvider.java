@@ -1,5 +1,8 @@
 package com.sejong.sejongbike.auth.jwt;
 
+import com.sejong.sejongbike.constant.Role;
+import com.sejong.sejongbike.entity.Member;
+import com.sejong.sejongbike.service.MemberService;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
@@ -8,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -16,20 +21,21 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
+import java.util.Set;
 
 @Component
 public class JwtProvider {
-    private final InMemoryUserDetailsManager inMemoryUserDetailsManager;
+    private final MemberService memberService;
     @Value("${jwt.secret:your-very-long-secret-key-that-is-at-least-64-bytes-long-0123456789abcdef0123456789abcdef}")
     private String secret;
-    @Value("${jwt.expiration:30000}") //1시간:3600000, 30초:30000
+    @Value("${jwt.expiration:600000}") //1시간:3600000, 30초:30000
     private long expiration;
-    @Value("${jwt.expiration:60000}") //1시간:3600000, 30초:30000
+    @Value("${jwt.expiration:3600000}") //1시간:3600000, 30초:30000
     private long refreshExpiration;
     private SecretKey secretKey;
 
-    public JwtProvider(@Lazy InMemoryUserDetailsManager inMemoryUserDetailsManager) {
-        this.inMemoryUserDetailsManager = inMemoryUserDetailsManager;
+    public JwtProvider(@Lazy MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @PostConstruct
@@ -76,7 +82,14 @@ public class JwtProvider {
 
     public UsernamePasswordAuthenticationToken getAuthentication(String token, HttpServletRequest request) {
         String usernameFromToken = getUsernameFromToken(token);
-        UserDetails userDetails = inMemoryUserDetailsManager.loadUserByUsername(usernameFromToken);
+        Member member = memberService.findByEmail(usernameFromToken);
+        Set<GrantedAuthority> roleSet = Set.of(new SimpleGrantedAuthority("ROLE_" + member.getRole().toString()));
+
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+                member.getEmail(),
+                member.getPassword(),
+                roleSet
+        );
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         return authentication;
