@@ -16,21 +16,21 @@ public class NoticeCommentApiController {
     NoticeCommentService noticeCommentService;
 
     //NoticeComment 전체 항목 받아오기
-    @GetMapping(value = "/apicontroll/notice/comment")
+    @GetMapping(value = "/notice/comment")
     public ResponseEntity<List<NoticeCommentDTO>> getNoticeCommentIndex(){
         List<NoticeCommentDTO> noticeCommentIndex = noticeCommentService.getNoticeCommentIndex();
         return ResponseEntity.status(HttpStatus.OK).body(noticeCommentIndex);
     }
 
     //NoticeComment 중 특정 Notice에 소속된 항목 받아오기
-    @GetMapping(value = "/apicontroll/notice/{noticeId}/comment")
+    @GetMapping(value = "/notice/{noticeId}/comment")
     public ResponseEntity<List<NoticeCommentDTO>> getNoticeComment(@PathVariable Long noticeId){
         List<NoticeCommentDTO> noticeComment = noticeCommentService.getNoticeComment(noticeId);
         return ResponseEntity.status(HttpStatus.OK).body(noticeComment);
     }
 
     //NoticeComment 등록하기
-    @PostMapping(value = "/apicontroll/notice/{noticeId}/comment")
+    @PostMapping(value = "/notice/{noticeId}/comment")
     public ResponseEntity<NoticeCommentDTO> postNoticeComment(@RequestBody NoticeCommentDTO noticeCommentDTO,
                                                               @PathVariable Long noticeId){
 
@@ -45,7 +45,7 @@ public class NoticeCommentApiController {
     }
 
     //NoticeComment 수정하기
-    @PatchMapping(value = "/apicontroll/notice/comment/{id}")
+    @PatchMapping(value = "/notice/comment/{id}")
     public ResponseEntity<NoticeCommentDTO> updateNoticeComment(@RequestBody NoticeCommentDTO noticeCommentDTO,
                                                                 @PathVariable Long id){
         NoticeCommentDTO updatedNoticeCommentDTO = noticeCommentService.updateNoticeComment(noticeCommentDTO, id);
@@ -58,7 +58,7 @@ public class NoticeCommentApiController {
     }
 
     //NoticeComment 삭제하기
-    @DeleteMapping(value = "/apicontroll/notice/comment/{id}")
+    @DeleteMapping(value = "/notice/comment/{id}")
     public ResponseEntity<NoticeCommentDTO> deleteNoticeComment(@PathVariable Long id){
         NoticeCommentDTO deletedNoticeCommentDTO = noticeCommentService.deleteNoticeComment(id);
         if(deletedNoticeCommentDTO != null){

@@ -18,21 +18,21 @@ public class MemberApiController {
     private PasswordEncoder passwordEncoder;
 
     //Member 전체 항목 받아오기
-    @GetMapping(value = "/apicontroll/member")
+    @GetMapping(value = "/member")
     public ResponseEntity<List<MemberDTO>> getMemberIndex(){
         List<MemberDTO> memberDTOIndex = memberService.getMemberIndex();
         return ResponseEntity.status(HttpStatus.OK).body(memberDTOIndex);
     }
 
     //Member 한개 받아오기
-    @GetMapping(value = "/apicontroll/member/{id}")
+    @GetMapping(value = "/member/{id}")
     public ResponseEntity<MemberDTO> getMember(@PathVariable Long id){
         MemberDTO memberDTO = memberService.getMember(id);
         return ResponseEntity.status(HttpStatus.OK).body(memberDTO);
     }
 
     //Member 등록하기
-    @PostMapping(value = "/apicontroll/member")
+    @PostMapping(value = "/member")
     public ResponseEntity<MemberDTO> createMember(@RequestBody MemberDTO memberDTO){
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
         MemberDTO createdMemberDTO = memberService.createMember(memberDTO);
@@ -45,7 +45,7 @@ public class MemberApiController {
     }
 
     //Member 수정하기
-    @PatchMapping(value = "/apicontroll/member/{id}")
+    @PatchMapping(value = "/member/{id}")
     public ResponseEntity<MemberDTO> updateMember(@RequestBody MemberDTO memberDTO,
                                                   @PathVariable Long id){
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
@@ -59,7 +59,7 @@ public class MemberApiController {
     }
 
     //Member 삭제하기
-    @DeleteMapping(value = "/apicontroll/member/{id}")
+    @DeleteMapping(value = "/member/{id}")
     public ResponseEntity<MemberDTO> deleteMember(@PathVariable Long id){
         MemberDTO deletedMemberDTO = memberService.deleteMember(id);
         if(deletedMemberDTO != null){

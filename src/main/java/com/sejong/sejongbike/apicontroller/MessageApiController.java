@@ -18,35 +18,35 @@ public class MessageApiController {
     private MessageService messageService;
 
     //인증된 유저가 수신한 Message 전부 받아오기
-    @GetMapping(value = "/apicontroll/message/receive")
+    @GetMapping(value = "/message/receive")
     public ResponseEntity<List<MessageDTO>> receiveMessageIndex(){
         List<MessageDTO> messageDTOIndex = messageService.getMessageIndex();
         return ResponseEntity.status(HttpStatus.OK).body(messageDTOIndex);
     }
 
     //인증된 유저가 수신한 Message 한 개 받아오기
-    @GetMapping(value = "/apicontroll/message/receive/{id}")
+    @GetMapping(value = "/message/receive/{id}")
     public ResponseEntity<MessageDTO> receiveMessage(@PathVariable Long id){
         MessageDTO messageDTO = messageService.getMessage(id);
         return ResponseEntity.status(HttpStatus.OK).body(messageDTO);
     }
 
     //인증된 유저가 송신한 Message 전부 받아오기
-    @GetMapping(value = "/apicontroll/message/send")
+    @GetMapping(value = "/message/send")
     public ResponseEntity<List<MessageDTO>> sendMessageIndex(){
         List<MessageDTO> messageDTOIndex = messageService.getSendMessageIndex();
         return ResponseEntity.status(HttpStatus.OK).body(messageDTOIndex);
     }
 
     //인증된 유저가 송신한 Message 한 개 받아오기
-    @GetMapping(value = "/apicontroll/message/send/{id}")
+    @GetMapping(value = "/message/send/{id}")
     public ResponseEntity<MessageDTO> sendMessage(@PathVariable Long id){
         MessageDTO messageDTO = messageService.getSendMessage(id);
         return ResponseEntity.status(HttpStatus.OK).body(messageDTO);
     }
 
     //Message 생성 및 전송하기
-    @PostMapping(value = "/apicontroll/message")
+    @PostMapping(value = "/message")
     public ResponseEntity<MessageDTO> createMessage(@Valid @RequestBody MessageRequestDTO req){
         try {
             MessageDTO createdMessageDTO = messageService.createMessage(req);
@@ -63,7 +63,7 @@ public class MessageApiController {
     }
 
     //인증한 유저가 수신한 Message 삭제하기
-    @DeleteMapping(value = "/apicontroll/message/receive/{id}")
+    @DeleteMapping(value = "/message/receive/{id}")
     public ResponseEntity<MessageDTO> deleteReceiveMessage(@PathVariable Long id){
         try {
             MessageDTO deletedMessageDTO = messageService.deleteMessageByReceiver(id);
@@ -80,7 +80,7 @@ public class MessageApiController {
     }
 
     //인증한 유저가 송신한 Message 삭제하기
-    @DeleteMapping(value = "/apicontroll/message/send/{id}")
+    @DeleteMapping(value = "/message/send/{id}")
     public ResponseEntity<MessageDTO> deleteSendMessage(@PathVariable Long id){
         try {
             MessageDTO deletedMessageDTO = messageService.deleteMessageBySender(id);
