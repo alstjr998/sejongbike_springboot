@@ -19,7 +19,7 @@ public class Notice extends BaseTimeEntity{
     @Column
     private String title;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     public void noticeUpdate(NoticeDTO noticeDTO){

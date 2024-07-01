@@ -9,7 +9,7 @@ INSERT INTO notice(title, content, sub_time, update_time) VALUES('여덟번째 �
 INSERT INTO notice(title, content, sub_time, update_time) VALUES('아홉번째 공지사항', '아홉번째 공지사항의 내용입니다.', '2024-06-22 01:16:57', '2024-06-22 01:16:57');
 INSERT INTO notice(title, content, sub_time, update_time) VALUES('열번째 공지사항', '열번째 공지사항의 내용입니다.', '2024-06-23 15:36:54', '2024-06-23 15:36:54');
 INSERT INTO notice(title, content, sub_time, update_time) VALUES('열한번째 공지사항', '열한번째 공지사항의 내용입니다.', '2024-06-24 23:49:31', '2024-06-24 23:49:31');
-INSERT INTO notice(title, content, sub_time, update_time) VALUES('열두번째 공지사항', '열두번째 공지사항의 내용입니다.', now(), now());
+INSERT INTO notice(title, content, sub_time, update_time) VALUES('어울링 대여시, QR코드 사기(큐싱) 주의 안내', '※최근, QR코드 위에 가짜 QR코드 스티커를 덧붙여 악성어플 다운을 유도하는 큐싱범죄가 전국적으로 발생하고 있으니, 어울링 이용에 각별히 주의하여 주시기 바랍니다.<br>※QR코드 사기 예방법<br>1. 어울링을 이용할 때는 가짜 QR코드가 있는지 살펴보세요.<br>▶ 어울링 대여시 핸들에 있는 QR코드 사용 권장<br>2. 어울링 대여는 반드시 어울링 앱 실행 후 단말기의 QR 코드를 스캔해야만 대여가 가능합니다.<br>▶ 어울링 대여시 연결되는 링크 및 악성어플 다운로드 없음<br>3. 어울링 대여시 개인정보, 계좌번호를 요구하지 않습니다.<br>▶ 어울링 대여시 개인정보 및 금융정보는 절대 입력하지 마세요', now(), now());
 
 
 INSERT INTO member(email, password, name, address, phone_num, ticket_expire_date, role) VALUES('test1@test.com', '$2a$10$eqnT3Kk3F1oG7twaWyfGNukYuKu5nPhb.9CcXYtm3t.4mf1bUYgW6', '운영자', '나성동', '010-1111-1111', '2024-08-08 10:00:00', 'ADMIN');

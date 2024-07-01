@@ -34,7 +34,7 @@ public class NoticeApiController {
 
     //Notice 한개 받아오기
     @GetMapping(value = "/notice/{id}")
-    public ResponseEntity<NoticeDTO> getNotice(@PathVariable Long id){
+    public ResponseEntity<NoticeDTO> getNotice(@PathVariable("id") Long id){
         NoticeDTO noticeDTO = noticeService.getNotice(id);
         return ResponseEntity.status(HttpStatus.OK).body(noticeDTO);
     }
