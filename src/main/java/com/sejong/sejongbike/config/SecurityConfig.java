@@ -63,7 +63,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/notice").permitAll() //공지 조회
                         .requestMatchers("/notice/{id}").permitAll() //공지 조회
-                        .requestMatchers("/notice/request").authenticated() //공지 등록, 수정, 삭제 요청
+                        .requestMatchers("/notice/request").hasRole("ADMIN") //공지 등록, 수정, 삭제 요청
 
                         .requestMatchers("/mypage").authenticated() //내 정보 조회
                         .requestMatchers("/login/home").authenticated()
