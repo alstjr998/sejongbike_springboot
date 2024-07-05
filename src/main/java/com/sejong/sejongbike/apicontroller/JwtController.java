@@ -5,6 +5,7 @@ import com.sejong.sejongbike.auth.jwt.JwtRequest;
 import com.sejong.sejongbike.entity.Member;
 import com.sejong.sejongbike.service.MemberService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
 
 @RestController
 @Slf4j
@@ -75,5 +78,17 @@ public class JwtController {
         response.addCookie(refreshTokenCookie);
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
+        String refreshToken = jwtProvider.resolveRefreshToken(request);
+        if (refreshToken != null && jwtProvider.validateToken(refreshToken)) {
+            String username = jwtProvider.getUsernameFromToken(refreshToken);
+            String newAccessToken = jwtProvider.createToken(username);
+            return ResponseEntity.ok().body(Collections.singletonMap("accessToken", newAccessToken));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token is invalid or expired");
+        }
     }
 }
