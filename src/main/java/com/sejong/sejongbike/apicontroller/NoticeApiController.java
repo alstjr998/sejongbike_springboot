@@ -54,7 +54,7 @@ public class NoticeApiController {
     //Notice 수정하기
     @PatchMapping(value = "/notice/request/{id}")
     public ResponseEntity<NoticeDTO> updateNotice(@RequestBody NoticeDTO noticeDTO,
-                                                  @PathVariable Long id){
+                                                  @PathVariable("id") Long id){
         NoticeDTO updatedNoticeDTO = noticeService.updateNotice(noticeDTO, id);
         if(updatedNoticeDTO != null){
             return ResponseEntity.status(HttpStatus.OK).body(updatedNoticeDTO);
@@ -66,7 +66,7 @@ public class NoticeApiController {
 
     //Notice 삭제하기 + 종속된 NoticeComment가 있을 경우 함께 삭제
     @DeleteMapping(value = "/notice/request/{id}")
-    public ResponseEntity<NoticeDTO> deleteNotice(@PathVariable Long id){
+    public ResponseEntity<NoticeDTO> deleteNotice(@PathVariable("id") Long id){
         List<NoticeCommentDTO> deleteNoticeCommentBundle = noticeCommentService.deleteNoticeCommentBundle(id);
         NoticeDTO deletedNoticeDTO = noticeService.deleteNotice(id);
         if(deletedNoticeDTO != null){
